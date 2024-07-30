@@ -1,0 +1,566 @@
+<html><head><base href="https://websim.ai" />
+<title>Neumorphic Clock App with Dark Theme Toggle</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f0f3f7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+  }
+  body.dark-theme {
+    background-color: #1a1a1a;
+  }
+  .phone-frame {
+    width: 300px;
+    height: 600px;
+    background-color: #f0f3f7;
+    border-radius: 40px;
+    box-shadow: 20px 20px 60px #c8ccd3, -20px -20px 60px #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark-theme .phone-frame {
+    background-color: #2a2a2a;
+    box-shadow: 20px 20px 60px #1a1a1a, -20px -20px 60px #3a3a3a;
+  }
+  .clock-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #f0f3f7;
+    box-shadow: 
+      10px 10px 20px #d1d9e6,
+      -10px -10px 20px #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark-theme .clock-container {
+    background: #2a2a2a;
+    box-shadow: 
+      10px 10px 20px #1a1a1a,
+      -10px -10px 20px #3a3a3a;
+  }
+  .clock {
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background-color: #f0f3f7;
+    position: relative;
+    box-shadow: 
+      inset 8px 8px 16px #d1d9e6,
+      inset -8px -8px 16px #ffffff;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark-theme .clock {
+    background-color: #2a2a2a;
+    box-shadow: 
+      inset 8px 8px 16px #1a1a1a,
+      inset -8px -8px 16px #3a3a3a;
+  }
+  .hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: 50% 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 2.3, 0.3, 1);
+    border-radius: 5px;
+  }
+  .hour-hand {
+    width: 5px;
+    height: 60px;
+    background: #a3aab8;
+    transform: translateX(-50%) rotate(0deg);
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.1),
+      -1px -1px 3px rgba(255, 255, 255, 0.7);
+  }
+  .dark-theme .hour-hand {
+    background: #8a8a8a;
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.3),
+      -1px -1px 3px rgba(255, 255, 255, 0.1);
+  }
+  .minute-hand {
+    width: 3px;
+    height: 80px;
+    background: #7d8699;
+    transform: translateX(-50%) rotate(0deg);
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.1),
+      -1px -1px 3px rgba(255, 255, 255, 0.7);
+  }
+  .dark-theme .minute-hand {
+    background: #7a7a7a;
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.3),
+      -1px -1px 3px rgba(255, 255, 255, 0.1);
+  }
+  .second-hand {
+    width: 2px;
+    height: 90px;
+    background: #ff6b6b;
+    transform: translateX(-50%) rotate(0deg);
+    box-shadow: 
+      1px 1px 2px rgba(0, 0, 0, 0.1),
+      -0.5px -0.5px 1px rgba(255, 255, 255, 0.7);
+  }
+  .dark-theme .second-hand {
+    background: #ff4f4f;
+    box-shadow: 
+      1px 1px 2px rgba(0, 0, 0, 0.3),
+      -0.5px -0.5px 1px rgba(255, 255, 255, 0.1);
+  }
+  .center-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff6b6b;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.1),
+      -1px -1px 3px rgba(255, 255, 255, 0.7);
+  }
+  .dark-theme .center-dot {
+    background: #ff4f4f;
+    box-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.3),
+      -1px -1px 3px rgba(255, 255, 255, 0.1);
+  }
+  .marker {
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background: #a3aab8;
+    left: 50%;
+    transform-origin: 50% 115px;
+    box-shadow: 
+      1px 1px 2px rgba(0, 0, 0, 0.1),
+      -0.5px -0.5px 1px rgba(255, 255, 255, 0.7);
+  }
+  .dark-theme .marker {
+    background: #8a8a8a;
+    box-shadow: 
+      1px 1px 2px rgba(0, 0, 0, 0.3),
+      -0.5px -0.5px 1px rgba(255, 255, 255, 0.1);
+  }
+  .marker.hour {
+    height: 12px;
+    width: 3px;
+    background: #7d8699;
+  }
+  .dark-theme .marker.hour {
+    background: #7a7a7a;
+  }
+  .alarm-list {
+    width: 100%;
+  }
+  .alarm-item {
+    background-color: #f0f3f7;
+    border-radius: 15px;
+    box-shadow: 
+      5px 5px 10px #d1d9e6, 
+      -5px -5px 10px #ffffff;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+  }
+  .dark-theme .alarm-item {
+    background-color: #2a2a2a;
+    box-shadow: 
+      5px 5px 10px #1a1a1a, 
+      -5px -5px 10px #3a3a3a;
+  }
+  .alarm-time {
+    font-size: 32px;
+    font-weight: 300;
+    color: #333;
+    transition: color 0.3s ease;
+  }
+  .dark-theme .alarm-time {
+    color: #f0f0f0;
+  }
+  .alarm-date {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+    transition: color 0.3s ease;
+  }
+  .dark-theme .alarm-date {
+    color: #aaa;
+  }
+  .toggle {
+    width: 60px;
+    height: 24px;
+    background-color: #e4e9f2;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 
+      inset 2px 2px 5px rgba(209,217,230,0.2),
+      inset -2px -2px 5px rgba(255,255,255,0.5);
+  }
+  .dark-theme .toggle {
+    background-color: #3a3a3a;
+    box-shadow: 
+      inset 2px 2px 5px rgba(26,26,26,0.2),
+      inset -2px -2px 5px rgba(58,58,58,0.5);
+  }
+  .toggle::before {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    top: -4px;
+    left: -4px;
+    transition: 0.3s;
+    box-shadow: 
+      3px 3px 8px rgba(0,0,0,0.1),
+      -1px -1px 6px rgba(255,255,255,0.8);
+    border: 1px solid #fff;
+  }
+  .dark-theme .toggle::before {
+    background-color: #2a2a2a;
+    box-shadow: 
+      3px 3px 8px rgba(0,0,0,0.3),
+      -1px -1px 6px rgba(58,58,58,0.8);
+    border: 1px solid #3a3a3a;
+  }
+  .toggle.on {
+    background-color: #ff5252;
+    box-shadow: 
+      inset 2px 2px 5px rgba(178,34,34,0.5),
+      inset -2px -2px 5px rgba(255,130,130,0.5);
+  }
+  .dark-theme .toggle.on {
+    background-color: #ff3a3a;
+    box-shadow: 
+      inset 2px 2px 5px rgba(178,34,34,0.5),
+      inset -2px -2px 5px rgba(255,130,130,0.5);
+  }
+  .toggle.on::before {
+    transform: translateX(36px);
+    background-color: #f0f3f7;
+  }
+  .dark-theme .toggle.on::before {
+    background-color: #2a2a2a;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 40px;
+    background: radial-gradient(ellipse at center, rgba(255,82,82,0.2) 0%, rgba(255,82,82,0) 70%);
+    border-radius: 20px;
+    top: -8px;
+    left: -10px;
+    opacity: 0;
+    transition: 0.3s;
+  }
+  .toggle.on::after {
+    opacity: 1;
+  }
+  .add-button-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-top: 20px;
+  }
+  .add-button-shadow {
+    position: absolute;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: #f0f3f7;
+    box-shadow: 
+      7px 7px 14px #c8ccd3, 
+      -7px -7px 14px #ffffff;
+    border: 1px solid #fff;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .dark-theme .add-button-shadow {
+    background: #2a2a2a;
+    box-shadow: 
+      7px 7px 14px #1a1a1a, 
+      -7px -7px 14px #3a3a3a;
+    border: 1px solid #3a3a3a;
+  }
+  .add-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ff4136, #e63a30);
+    color: white;
+    font-size: 30px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+      4px 4px 8px rgba(230, 58, 48, 0.3),
+      -4px -4px 8px rgba(255, 65, 54, 0.3),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark-theme .add-button {
+    background: linear-gradient(145deg, #ff3a30, #e63328);
+    box-shadow: 
+      4px 4px 8px rgba(230, 58, 48, 0.3),
+      -4px -4px 8px rgba(255, 65, 54, 0.3),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.1),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .add-button::before {
+    content: '+';
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  .add-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 100%);
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .add-button-glow {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(255, 110, 100, 0.4) 0%, rgba(255, 110, 100, 0) 70%);
+    opacity: 0.8;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.8;
+    }
+  }
+  .theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 25px;
+    background-color: #e4e9f2;
+    border-radius: 12.5px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 
+      inset 2px 2px 5px rgba(209,217,230,0.2),
+      inset -2px -2px 5px rgba(255,255,255,0.5);
+  }
+  .dark-theme .theme-toggle {
+    background-color: #3a3a3a;
+    box-shadow: 
+      inset 2px 2px 5px rgba(26,26,26,0.2),
+      inset -2px -2px 5px rgba(58,58,58,0.5);
+  }
+  .theme-toggle::before {
+    content: '☀️';
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    box-shadow: 
+      3px 3px 8px rgba(0,0,0,0.1),
+      -1px -1px 6px rgba(255,255,255,0.8);
+    border: 1px solid #fff;
+  }
+  .dark-theme .theme-toggle::before {
+    content: '🌙';
+    transform: translateX(25px);
+    background-color: #2a2a2a;
+    box-shadow: 
+      3px 3px 8px rgba(0,0,0,0.3),
+      -1px -1px 6px rgba(58,58,58,0.8);
+    border: 1px solid #3a3a3a;
+  }
+</style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="theme-toggle"></div>
+    <div class="clock-container">
+      <div class="clock">
+        <div class="hand hour-hand"></div>
+        <div class="hand minute-hand"></div>
+        <div class="hand second-hand"></div>
+        <div class="center-dot"></div>
+        <!-- Clock markers -->
+        <div class="marker hour" style="transform: rotate(0deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(6deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(12deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(18deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(24deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(30deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(36deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(42deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(48deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(54deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(60deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(66deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(72deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(78deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(84deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(90deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(96deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(102deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(108deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(114deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(120deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(126deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(132deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(138deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(144deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(150deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(156deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(162deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(168deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(174deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(180deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(186deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(192deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(198deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(204deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(210deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(216deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(222deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(228deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(234deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(240deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(246deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(252deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(258deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(264deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(270deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(276deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(282deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(288deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(294deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(300deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(306deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(312deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(318deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(324deg) translateX(-50%)"></div>
+        <div class="marker hour" style="transform: rotate(330deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(336deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(342deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(348deg) translateX(-50%)"></div>
+        <div class="marker" style="transform: rotate(354deg) translateX(-50%)"></div>
+      </div>
+    </div>
+    <div class="alarm-list">
+      <div class="alarm-item">
+        <div>
+          <div class="alarm-time">07:30</div>
+          <div class="alarm-date">Mon, 15 Dec</div>
+        </div>
+        <div class="toggle on"></div>
+      </div>
+      <div class="alarm-item">
+        <div>
+          <div class="alarm-time">08:00</div>
+          <div class="alarm-date">MTWTFSS</div>
+        </div>
+        <div class="toggle"></div>
+      </div>
+    </div>
+    <div class="add-button-container">
+      <div class="add-button-shadow"></div>
+      <div class="add-button-glow"></div>
+      <button class="add-button"></button>
+    </div>
+  </div>
+
+  <script>
+    function setDate() {
+      const now = new Date();
+      
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      document.querySelector('.second-hand').style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
+      
+      const minutes = now.getMinutes();
+      const minutesDegrees = ((minutes / 60) * 360) + 90;
+      document.querySelector('.minute-hand').style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
+      
+      const hours = now.getHours();
+      const hoursDegrees = ((hours / 12) * 360) + ((minutes / 60) * 30) + 90;
+      document.querySelector('.hour-hand').style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
+    }
+
+    setDate();
+    setInterval(setDate, 1000);
+
+    // Toggle switch functionality
+    const toggles = document.querySelectorAll('.toggle');
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('on');
+      });
+    });
+
+    // Dark theme toggle functionality
+    const themeToggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+    
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-theme');
+    });
+  </script>
+</body>
+</html>
